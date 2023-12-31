@@ -37,4 +37,4 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/realdebridmanager:${{ env.MY_DATE }}
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/real-debrid-manager:${{ env.MY_DATE }}
