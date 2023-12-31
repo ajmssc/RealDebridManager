@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "realdebridmanager"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+packages = [
+    { include = "realdebridmanager", from = "." },
+]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+flask = "^3.0.0"
+flask-basicauth = "^0.2.0"
+requests = "^2.31.0"
+aria2p = "^0.11.3"
+pyinotify = [
+    { version = '0.9.6', platform = 'linux' },
+]
+gunicorn = "^21.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

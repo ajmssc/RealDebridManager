@@ -4,14 +4,15 @@ import os
 databaseinfo = os.getenv('dbinfo')
 pathtowatch = os.getenv('watchpath')
 
-
 wm = pyinotify.WatchManager()  # Watch Manager
 mask = pyinotify.IN_DELETE | pyinotify.IN_CREATE  # watched events
 
 import sqlite3
+
 connection = sqlite3.connect(databaseinfo, timeout=20)
 cursor = connection.cursor()
-cursor.execute("CREATE TABLE IF NOT EXISTS tasks (id TEXT, filename TEXT, rdstatus TEXT, rdprogressdownload INTEGER, attemptstogetlink INTEGER, rderror TEXT , completed TEXT , Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP )")
+cursor.execute(
+    "CREATE TABLE IF NOT EXISTS tasks (id TEXT, filename TEXT, rdstatus TEXT, rdprogressdownload INTEGER, attemptstogetlink INTEGER, rderror TEXT , completed TEXT , Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP )")
 
 
 class EventHandler(pyinotify.ProcessEvent):
@@ -20,25 +21,22 @@ class EventHandler(pyinotify.ProcessEvent):
         filename = (tail)
         extension = os.path.splitext(filename)[1][1:]
         if extension == "torrent":
-            print("Torrent file detected ",tail)
-            torrent=(event.pathname)
+            print("Torrent file detected ", tail)
+            torrent = (event.pathname)
             import subprocess
             process = subprocess.Popen(['python', 'RDtorrent.py', torrent])
 
         elif extension == "magnet":
-            print("Magnet file detected ",tail)
+            print("Magnet file detected ", tail)
             magnetlink = (event.pathname)
             import subprocess
             process = subprocess.Popen(['python', 'RDmagnet.py', magnetlink])
 
         else:
-            print("IGNORE Not suitable - " , tail)
-
-
+            print("IGNORE Not suitable - ", tail)
 
 
 handler = EventHandler()
 notifier = pyinotify.Notifier(wm, handler)
 wdd = wm.add_watch(pathtowatch, mask, rec=True)
 notifier.loop()
-
