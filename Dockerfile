@@ -1,5 +1,5 @@
 FROM python:3.9-alpine as builder
-RUN apk add --no-cache --virtual .pynacl_deps build-base python3-dev libffi-dev musl-dev openssl-dev
+RUN apk add --no-cache --virtual .pynacl_deps build-base python3-dev libffi-dev musl-dev openssl-dev cargo
 RUN pip install --upgrade pip
 RUN pip install poetry
 
