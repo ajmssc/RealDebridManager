@@ -16,14 +16,14 @@ def post_process_torrent(debrid_client, torrent_id, file):
     if new_torrent_info['status'] == "waiting_files_selection":
         debrid_client.select_files(torrent_id, ["all"])
         new_torrent_info = debrid_client.get_torrent_info(torrent_id)
-    if new_torrent_info['status'] == "downloaded":
+    if new_torrent_info['status'] in ("downloaded", "magnet_conversion"):
         database.add_task(new_torrent_info['id'],
                           'blackhole',
                           new_torrent_info['filename'],
                           new_torrent_info['status'],
                           new_torrent_info['progress'], attempts=1, rderror=0, completed=1)
         move_processed(file, "processed")
-    elif new_torrent_info['status'] in ("magnet_error", "error", "magnet_conversion", "virus", "dead"):
+    elif new_torrent_info['status'] in ("magnet_error", "error", "virus", "dead"):
         database.add_task(new_torrent_info['id'],
                           'blackhole',
                           new_torrent_info['filename'],
