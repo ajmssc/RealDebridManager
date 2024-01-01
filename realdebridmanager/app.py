@@ -22,7 +22,7 @@ elif WATCH_PATH is None:
 
 WATCH_PATH = os.path.abspath(WATCH_PATH)
 database.update_setting('watchpath', WATCH_PATH)
-
+print("Watch path is " + WATCH_PATH)
 os.makedirs(WATCH_PATH + "/processed", mode=0o777, exist_ok=True)
 os.makedirs(WATCH_PATH + "/errored", mode=0o777, exist_ok=True)
 
