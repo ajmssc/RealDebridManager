@@ -1,5 +1,5 @@
 FROM python:3.9-alpine as builder
-
+RUN apk add --no-cache --virtual .pynacl_deps build-base python3-dev libffi-dev
 RUN pip install poetry
 
 ADD pyproject.toml /build/pyproject.toml
