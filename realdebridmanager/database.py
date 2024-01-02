@@ -1,12 +1,13 @@
 import os
 import sqlite3 as sql
 
-DATABASE_URL = os.getenv('dbinfo', "main.db")
+SQLITE_PATH = os.getenv('DB_PATH', "main.db")
 
 
 class Database:
     def __init__(self):
-        self.connection = sql.connect(DATABASE_URL, timeout=20, check_same_thread=False)
+        print("Database path is " + SQLITE_PATH)
+        self.connection = sql.connect(SQLITE_PATH, timeout=20, check_same_thread=False)
         self.connection.row_factory = sql.Row
         self.cursor = self.connection.cursor()
         self._ensure_tables_exist()

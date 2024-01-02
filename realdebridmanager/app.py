@@ -1,4 +1,4 @@
-import os
+import os, signal
 
 from flask import Flask
 from flask_basicauth import BasicAuth
@@ -14,8 +14,8 @@ app_settings = database.get_all_settings()
 app.config['BASIC_AUTH_USERNAME'] = app_settings['username']
 app.config['BASIC_AUTH_PASSWORD'] = app_settings['password']
 
-WATCH_PATH = os.getenv('watchpath')
-if WATCH_PATH is None and app_settings.get('watchpath', None) is None:
+WATCH_PATH = os.getenv('WATCH_PATH')
+if WATCH_PATH is None and app_settings.get('WATCH_PATH', None) is None:
     WATCH_PATH = os.path.abspath("./watch")
 elif WATCH_PATH is None:
     WATCH_PATH = app_settings.get('watchpath', None)
@@ -36,5 +36,13 @@ def background_tasks():
     check_tasks_for_completion()
 
 
+def exit_gracefully(signum, _):
+    print(f"Shutting down from signal {signum}")
+    scheduler.shutdown()
+    exit(0)
+
+
 scheduler.add_job(id='Background Tasks', func=background_tasks, trigger="interval", seconds=3)
+signal.signal(signal.SIGTERM, exit_gracefully)
+signal.signal(signal.SIGINT, exit_gracefully)
 scheduler.start()

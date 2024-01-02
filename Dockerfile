@@ -8,13 +8,20 @@ ADD realdebridmanager /build/realdebridmanager
 WORKDIR /build
 RUN poetry build -f wheel
 
+
 FROM python:3.9-alpine
-RUN mkdir /app
+
+RUN mkdir /app /config /watch
+RUN addgroup abc
+RUN adduser abc -G abc -D -h /app
+
+ENV TZ="America/Los_Angeles"
+
 COPY --from=builder /build/dist/*.whl /app
 RUN pip install /app/*.whl
-RUN mkdir /watch
-RUN mkdir /config
 WORKDIR /app
 ADD startscript.sh /app
 RUN chmod a+x startscript.sh
+RUN chown -R abc:abc /app /watch /config
+
 ENTRYPOINT [ "/bin/sh", "startscript.sh" ]
